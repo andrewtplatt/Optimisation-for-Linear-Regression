@@ -20,8 +20,9 @@ sd_w = mean_w;
 
 % Run the tests
 for i = 1:length(fracs)
+    frac = fracs(i);
     for j = 1:n_iters
-       [train_D, test_D] = random_split(D, fracs(i)); 
+       [train_D, test_D] = random_split(D, frac); 
        ws(:,j) = lsq_regression(train_D);
        mean_sq_errors(j) = compute_mean_squared_error(test_D, ws(:,j));
     end
@@ -32,10 +33,15 @@ for i = 1:length(fracs)
     sd_w(:,i) = std(ws, 0, 2);
     
     % Tabulate the statistics for w
-    var_names = {'Mean', 'SD'};
-    row_names = {'CRIM'; 'ZN'; 'INDUS'; 'CHAS'; 'NOX'; 'RM'; 'AGE'; 'DIS'; 'RAD'; 'TAX'; 'PTRATIO'; 'B'; 'LSTAT'};
-    w_stats = table(mean_w(:,i), sd_w(:,i), 'VariableNames', var_names, 'RowNames', row_names)
+    mean_column = [round(mean_w(:,i), 4); NaN];
+    sd_column = [round(sd_w(:,i), 4); NaN];
+    frac_column = [zeros(length(mean_column)-1, 1) + frac; NaN];
+    var_names = {'Frac', 'Mean', 'SD'};
+    row_names = {'CRIM'; 'ZN'; 'INDUS'; 'CHAS'; 'NOX'; 'RM'; 'AGE'; 'DIS'; 'RAD'; 'TAX'; 'PTRATIO'; 'B'; 'LSTAT'; '_'};
+    w_stats = table(frac_column, mean_column, sd_column, ...
+        'VariableNames', var_names, 'RowNames', row_names);
+    
+    % Write the table to file
+    writetable(w_stats, 'lsq_stats.xlsx', 'FileType', 'spreadsheet', 'WriteMode', 'append', 'WriteRowNames',true)
 end
-
-% Print the results to a file
 
