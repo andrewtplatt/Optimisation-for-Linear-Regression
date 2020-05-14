@@ -43,7 +43,17 @@ for i = 1:length(fracs)
         'VariableNames', var_names, 'RowNames', row_names);
     
     % Write the table to file
-    writetable(w_stats, 'lsq_stats.xlsx', 'FileType', 'spreadsheet', ...
+    writetable(w_stats, 'w_stats.xlsx', 'FileType', 'spreadsheet', ...
         'WriteMode', 'append', 'WriteRowNames',true)
 end
+
+% Tabulate the statistics for error
+error_stats = table(fracs', round(mean_mse, 4), round(sd_mse, 4), ...
+    'VariableNames', {'Frac', 'Mean', 'SD'});
+
+% Write the table to file
+writetable(error_stats, 'error_stats.xlsx', 'FileType', 'spreadsheet', ...
+        'WriteMode', 'append')
+
+
 
