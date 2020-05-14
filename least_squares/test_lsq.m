@@ -37,11 +37,13 @@ for i = 1:length(fracs)
     sd_column = [round(sd_w(:,i), 4); NaN];
     frac_column = [zeros(length(mean_column)-1, 1) + frac; NaN];
     var_names = {'Frac', 'Mean', 'SD'};
-    row_names = {'CRIM'; 'ZN'; 'INDUS'; 'CHAS'; 'NOX'; 'RM'; 'AGE'; 'DIS'; 'RAD'; 'TAX'; 'PTRATIO'; 'B'; 'LSTAT'; '_'};
+    row_names = {'CRIM'; 'ZN'; 'INDUS'; 'CHAS'; 'NOX'; 'RM'; 'AGE'; 'DIS'; ...
+        'RAD'; 'TAX'; 'PTRATIO'; 'B'; 'LSTAT'; '_'};
     w_stats = table(frac_column, mean_column, sd_column, ...
         'VariableNames', var_names, 'RowNames', row_names);
     
     % Write the table to file
-    writetable(w_stats, 'lsq_stats.xlsx', 'FileType', 'spreadsheet', 'WriteMode', 'append', 'WriteRowNames',true)
+    writetable(w_stats, 'lsq_stats.xlsx', 'FileType', 'spreadsheet', ...
+        'WriteMode', 'append', 'WriteRowNames',true)
 end
 
