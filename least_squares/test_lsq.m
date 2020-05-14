@@ -30,6 +30,11 @@ for i = 1:length(fracs)
     sd_mse(i) = std(mean_sq_errors);
     mean_w(:,i) = mean(ws, 2);
     sd_w(:,i) = std(ws, 0, 2);
+    
+    % Tabulate the statistics for w
+    var_names = {'Mean', 'SD'};
+    row_names = {'CRIM'; 'ZN'; 'INDUS'; 'CHAS'; 'NOX'; 'RM'; 'AGE'; 'DIS'; 'RAD'; 'TAX'; 'PTRATIO'; 'B'; 'LSTAT'};
+    w_stats = table(mean_w(:,i), sd_w(:,i), 'VariableNames', var_names, 'RowNames', row_names)
 end
 
 % Print the results to a file
