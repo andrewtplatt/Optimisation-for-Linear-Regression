@@ -32,5 +32,5 @@ for i = 1:length(fracs)
     sd_w(:,i) = std(ws, 0, 2);
 end
 
-
+% Print the results to a file
 
