@@ -13,5 +13,5 @@ function w = lsq_regression(train_D)
         b = b + result*params;
     end
     % Compute w
-    w = A\b;
+    w = inv(A)*b;
 end
