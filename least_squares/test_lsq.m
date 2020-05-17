@@ -1,5 +1,7 @@
 % Get our dataset
 D = get_dataset();
+% Just use a portion of the dataset for testing purposes
+% [D, ~] = random_split(D, 0.1);
 n_vars = size(D, 2) - 1;
 
 % Define the different values of frac we'll be testing
@@ -8,7 +10,7 @@ fracs = 0.2:step_size:0.9;
 
 % Define how many times we should repeat for each frac, and create storage
 % vectors for the values
-n_iters = 1000;
+n_iters = 100;
 mean_sq_errors = zeros(n_iters, 1);
 ws = zeros(n_vars, n_iters);
 
@@ -37,10 +39,10 @@ for i = 1:length(fracs)
     sd_column = [round(sd_w(:,i), 4); NaN];
     frac_column = [zeros(n_vars, 1) + frac; NaN];
     var_names = {'Frac', 'Mean', 'SD'};
-    row_names = {'CRIM'; 'ZN'; 'INDUS'; 'CHAS'; 'NOX'; 'RM'; 'AGE'; 'DIS'; ...
-        'RAD'; 'TAX'; 'PTRATIO'; 'B'; 'LSTAT'; '_'};
+    %row_names = {'CRIM'; 'ZN'; 'INDUS'; 'CHAS'; 'NOX'; 'RM'; 'AGE'; 'DIS'; ...
+    %    'RAD'; 'TAX'; 'PTRATIO'; 'B'; 'LSTAT'; '_'};
     w_stats = table(frac_column, mean_column, sd_column, ...
-        'VariableNames', var_names, 'RowNames', row_names);
+        'VariableNames', var_names);
     
     % Write the table to file
     if i == 1 

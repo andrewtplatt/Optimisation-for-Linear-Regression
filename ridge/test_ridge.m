@@ -8,6 +8,8 @@ mses = zeros(length(lambdas), 1);
 
 % Get our dataset and split it appropriately
 D = get_dataset();
+% Just use a portion of the dataset for testing purposes
+[D, ~] = random_split(D, 0.1);
 [trainval_D, test_D] = random_split(D, frac);
 
 for i = 1:length(lambdas)
