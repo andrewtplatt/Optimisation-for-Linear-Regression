@@ -1,3 +1,4 @@
+clear variables
 % Define some parameters for use later.
 frac = 0.6;
 frac2 = 0.8;
