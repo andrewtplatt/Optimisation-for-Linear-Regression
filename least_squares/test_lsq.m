@@ -1,3 +1,4 @@
+clear variables
 % Get our dataset
 D = get_dataset();
 % Just use a portion of the dataset for testing purposes
@@ -10,7 +11,7 @@ fracs = 0.2:step_size:0.9;
 
 % Define how many times we should repeat for each frac, and create storage
 % vectors for the values
-n_iters = 100;
+n_iters = 1000;
 mean_sq_errors = zeros(n_iters, 1);
 ws = zeros(n_vars, n_iters);
 
