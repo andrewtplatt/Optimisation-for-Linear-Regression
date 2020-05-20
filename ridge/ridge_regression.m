@@ -4,7 +4,7 @@ function w = ridge_regression(train_D, lambda)
     [n_data, n_params] = size(train_D);
     
     % Get the ridge offset to penalise large terms
-    ridge = n_data * lambda/(2*n_params);
+    ridge = n_data * lambda/(2*(n_params-1));
     
     % Solve as Aw = b
     M = train_D(:,1:end-1);

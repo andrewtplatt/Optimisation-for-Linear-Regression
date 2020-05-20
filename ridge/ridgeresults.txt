@@ -1,10 +1,10 @@
-Using a lambda value of 0.001 we obtain a w vector:
+Using a lambda value of 0.0001 we obtain a w vector:
 -0.741
--0.786
+-0.787
 0.126
 -0.156
-0.415
--0.38
-0.161
+0.416
+-0.382
+0.162
 0.663
-Which results in a Mean Squared Error of: 0.374
+Which results in a Mean Squared Error of: 0.373
