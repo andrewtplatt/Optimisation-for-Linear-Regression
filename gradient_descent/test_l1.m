@@ -2,7 +2,7 @@ clear variables
 frac = 0.6; 
 frac2 = 0.8;
 lambdas = [1e-3, 1e-2, 0.1, 1, 10, 1e2, 1e3];
-n_iterations = 100;     % Number of times to average for the final mean squared error
+n_iterations = 10;     % Number of times to average for the final mean squared error
 iteration_mae = zeros(n_iterations, 1);
 maes = zeros(length(lambdas), 1);
 

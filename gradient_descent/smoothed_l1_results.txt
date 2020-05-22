@@ -1,0 +1,10 @@
+Using a lambda value of 0.001 we obtain a w vector:
+NaN
+NaN
+NaN
+NaN
+NaN
+NaN
+NaN
+NaN
+Which results in a Mean Absolute Error of: NaN
