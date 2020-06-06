@@ -18,5 +18,5 @@ function f_tau = get_loss(D, w, lambda, tau)
     y = sum(log(1 + exp(-2*abs(w))));
     
     % Our smoothed function
-    f_tau = f + tau*lambda/2 * y + tau/n_data * x;
+    f_tau = (f + tau*lambda/2 * y + tau/n_data * x)/n_data;
 end
