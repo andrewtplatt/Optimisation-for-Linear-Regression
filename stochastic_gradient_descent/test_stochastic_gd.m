@@ -1,16 +1,17 @@
 clear variables
 frac = 0.7;
 frac2 = 0.8;
-lambdas = [1e-3, 1e-2, 1e-1, 1];
-batch_sizes = [1, 2, 4, 8, 16, 32, 64];
-n_iterations = 10;     % Number of times to average for the final mean squared error
+lambdas = [1e-3, 1e-2];
+batch_sizes = [32, 64];
+n_iterations = 20;     % Number of times to average for the final mean squared error
 iteration_mae = zeros(n_iterations, 1);
 maes = zeros(length(batch_sizes), 1);
+maes2 = zeros(length(lambdas), 1);
 
 % Get the dataset and split it up
 D = get_dataset();
 % Only use a small portion for testing
-[D, ~] = random_split(D, 0.1);
+% [D, ~] = random_split(D, 0.1);
 [trainval_D, test_D] = random_split(D, frac);
 
 % n_trainval_data = size(trainval_D, 1);
@@ -80,28 +81,31 @@ for i = 1:length(lambdas)
         w = smoothed_stochastic_l1_regression(train_D, lambdas(i), B);
         section_mae(j) = compute_mean_abs_error(val_D, w);
     end
-    maes(i) = mean(section_mae);
+    maes2(i) = mean(section_mae);
 end
 
 % Choose the best value for batch size
-[~, l_index] = min(maes);
+[~, l_index] = min(maes2);
 lambda = lambdas(l_index);
 
 iteration_w = zeros(n_params, n_iterations);
 for i = 1:n_iterations
-%     [trainval_D, test_D] = random_split(D, frac);
+    %     [trainval_D, test_D] = random_split(D, frac);
     iteration_w(:, i) = smoothed_stochastic_l1_regression(trainval_D, lambda, B);
     iteration_mae(i) = compute_mean_abs_error(test_D, iteration_w(:, i));
 end
 w = mean(iteration_w, 2);
 mae = mean(iteration_mae);
+std = std(iteration_mae);
 
 % Write the results to a file
 formatSpec = "Using a lambda value of %g and batch size of %d we obtain a w vector:\n";
 wSpec = "%.3g\n";
-maeSpec = "Which results in a Mean Absolute Error of: %.3g";
+maeSpec = "Which results in a Mean Absolute Error of: %.3g\n";
+stdSpec = "With standard deviation: %.3g";
 fileID = fopen('smoothed_stochastic_l1_results.txt', 'w');
 fprintf(fileID, formatSpec, lambda, B);
 fprintf(fileID, wSpec, w);
 fprintf(fileID, maeSpec, mae);
+fprintf(fileID, stdSpec, std);
 fclose('all');
