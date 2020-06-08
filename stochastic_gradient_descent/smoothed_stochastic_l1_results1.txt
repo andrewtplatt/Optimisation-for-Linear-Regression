@@ -1,0 +1,10 @@
+Using a lambda value of 0.001 and batch size of 20 we obtain a w vector:
+-0.605
+-0.646
+0.129
+-0.285
+0.65
+-0.434
+0.109
+0.749
+Which results in a Mean Absolute Error of: 0.433
