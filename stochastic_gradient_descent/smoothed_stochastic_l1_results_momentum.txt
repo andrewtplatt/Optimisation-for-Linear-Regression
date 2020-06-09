@@ -1,0 +1,11 @@
+Using a lambda value of 0.001 and batch size of 32 we obtain a w vector:
+-0.672
+-0.699
+0.106
+-0.246
+0.432
+-0.419
+0.273
+0.722
+Which results in a Mean Absolute Error of: 0.437
+With standard deviation: 0.0047

@@ -1,10 +1,11 @@
 function w = smoothed_stochastic_l1_regression(train_D, lambda, B)
     tau = 1e-2;                     % Smoothing parameter
     eta = 1;                        % Step size for gradient descent
+    mom = 0;                      % Momentum parameter
     
     % Criteria for the loop to end
-    max_n_iterations = 2e5;
-    max_time = 90;                 % Seconds
+    max_n_iterations = 5e4;
+    max_time = 120;                 % Seconds
     
     % Parameters obtained from the training matrix
     n_params = size(train_D, 2) - 1;
@@ -13,6 +14,7 @@ function w = smoothed_stochastic_l1_regression(train_D, lambda, B)
     % Initialisation of the w vector
     w = randn(n_params, 1);
     best_w = w;
+    grad = 0; prev_grad = 0;
     
     % Get the first loss function value and store it ready for comparison
     % with the next one and the best one
@@ -24,7 +26,7 @@ function w = smoothed_stochastic_l1_regression(train_D, lambda, B)
     % Iterate and travel downhill until the loss function is small enough
     iter = 1;
     tic
-    while iter < max_n_iterations && toc < max_time
+    while iter < max_n_iterations %&& toc < max_time
         tau = 1e-2/iter;
         losses(iter) = current_loss;
         
@@ -36,7 +38,7 @@ function w = smoothed_stochastic_l1_regression(train_D, lambda, B)
         % Update step size 
         eta = 1/iter;
         % Step downhill
-        w = w - grad*eta;
+        w = w - (grad + mom*prev_grad)/(1 + mom)*eta;
         if mod(iter, 1000) == 1
             current_loss = get_loss(train_D, w, lambda, tau);
             %mae(iter) = compute_mean_abs_error(train_D, w);
@@ -48,6 +50,7 @@ function w = smoothed_stochastic_l1_regression(train_D, lambda, B)
             best_w = w;
         end
         iter = iter + 1;
+        prev_grad = grad;
     end
     
     w = best_w;
