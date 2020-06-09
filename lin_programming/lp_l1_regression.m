@@ -1,0 +1,42 @@
+function w = lp_l1_regression(train_D, lambda)
+    n_params = size(train_D, 2) - 1;
+    n_data = size(train_D, 1);
+    M = train_D(:, 1:n_params);
+    y = train_D(:, end);
+    
+    % Create A and b such that the constraints are as Ax <= b
+    A_size = 2*n_params + n_data;
+    A = zeros(A_size);
+    b = zeros(A_size, 1);
+    
+    %% Define our objective function
+    % In the order w > v > xi
+    f_w = zeros(n_params, 1);
+    f_v = lambda/2*ones(n_params, 1);
+    f_xi = 1/n_data*ones(n_data, 1);
+    f = [f_w; f_v; f_xi];
+    
+    %% Populate A
+    % Put M in the bottom left corner
+    A(2*n_params+1:end, 1:n_params) = M;
+    % Put -I in the bottom right corner
+    A(2*n_params+1:end, 2*n_params+1:end) = -eye(n_data);
+    % Fill the top left corner to satisfy vj >= wj, -wj
+    row = 1; col = 1;
+    while row <= 2*n_params
+       A(row, col) = -1;
+       A(row, col+2) = -1;
+       A(row+1, col) = 1;
+       A(row+1, col+2) = -1;
+       row = row + 2;
+       col = col + 1;
+    end
+    
+    %% Populate b
+    b(2*n_params+1:end) = y;
+    
+    %% Calculate the result
+    res = linprog(f, A, b);
+    w = res(1:n_params);
+    
+end
