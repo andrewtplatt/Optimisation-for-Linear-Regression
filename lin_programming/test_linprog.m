@@ -8,7 +8,7 @@ maes = zeros(length(lambdas), 1);
 % Get the dataset and split it up
 D = get_dataset();
 % Only use a small portion for testing
-[D, ~] = random_split(D, 0.1);
+% [D, ~] = random_split(D, 0.1);
 [trainval_D, test_D] = random_split(D, frac);
 
 % n_trainval_data = size(trainval_D, 1);
@@ -70,7 +70,7 @@ formatSpec = "Using a lambda value of %g we obtain a w vector:\n";
 wSpec = "%.3g\n";
 maeSpec = "Which results in a Mean Absolute Error of: %.3g\n";
 stdSpec = "With standard deviation: %.3g";
-fileID = fopen('smoothed_stochastic_l1_results.txt', 'w');
+fileID = fopen('lin_prog_l1_results.txt', 'w');
 fprintf(fileID, formatSpec, lambda);
 fprintf(fileID, wSpec, w);
 fprintf(fileID, maeSpec, mae);

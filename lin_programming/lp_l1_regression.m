@@ -5,9 +5,10 @@ function w = lp_l1_regression(train_D, lambda)
     y = train_D(:, end);
     
     % Create A and b such that the constraints are as Ax <= b
-    A_size = 2*n_params + n_data;
-    A = zeros(A_size);
-    b = zeros(A_size, 1);
+    A_rows = 2*n_params + 2*n_data;
+    A_cols = 2*n_params + n_data;
+    A = sparse(A_rows, A_cols);
+    b = zeros(A_rows, 1);
     
     %% Define our objective function
     % In the order w > v > xi
@@ -18,25 +19,31 @@ function w = lp_l1_regression(train_D, lambda)
     
     %% Populate A
     % Put M in the bottom left corner
-    A(2*n_params+1:end, 1:n_params) = M;
+    A((2*n_params+1):(2*n_params+n_data), 1:n_params) = sparse(M);
+    A((2*n_params+n_data+1):end, 1:n_params) = sparse(-M);
     % Put -I in the bottom right corner
-    A(2*n_params+1:end, 2*n_params+1:end) = -eye(n_data);
+    A((2*n_params+1):(2*n_params+n_data), 2*n_params+1:end) = -speye(n_data);
+    A((2*n_params+n_data+1):end, 2*n_params+1:end) = -speye(n_data);
     % Fill the top left corner to satisfy vj >= wj, -wj
     row = 1; col = 1;
     while row <= 2*n_params
        A(row, col) = -1;
-       A(row, col+2) = -1;
+       A(row, col+n_params) = -1;
        A(row+1, col) = 1;
-       A(row+1, col+2) = -1;
+       A(row+1, col+n_params) = -1;
        row = row + 2;
        col = col + 1;
     end
+    A = sparse(A);
     
     %% Populate b
-    b(2*n_params+1:end) = y;
+    b((2*n_params+1):(2*n_params+n_data)) = y;
+    b((2*n_params+n_data+1):end) = -y;
     
     %% Calculate the result
-    res = linprog(f, A, b);
+    % Set the optimoptions
+    options = optimoptions(@linprog, 'Algorithm', 'interior-point');
+    res = linprog(f, A, b, [], [], [], [], options);
     w = res(1:n_params);
     
 end
