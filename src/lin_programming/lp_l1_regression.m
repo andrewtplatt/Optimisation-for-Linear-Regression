@@ -25,6 +25,7 @@ function w = lp_l1_regression(train_D, lambda)
     A((2*n_params+1):(2*n_params+n_data), 2*n_params+1:end) = -speye(n_data);
     A((2*n_params+n_data+1):end, 2*n_params+1:end) = -speye(n_data);
     % Fill the top left corner to satisfy vj >= wj, -wj
+    A = sparse(A);
     row = 1; col = 1;
     while row <= 2*n_params
        A(row, col) = -1;
@@ -34,7 +35,7 @@ function w = lp_l1_regression(train_D, lambda)
        row = row + 2;
        col = col + 1;
     end
-    A = sparse(A);
+   
     
     %% Populate b
     b((2*n_params+1):(2*n_params+n_data)) = y;
@@ -43,7 +44,7 @@ function w = lp_l1_regression(train_D, lambda)
     %% Calculate the result
     % Set the optimoptions
     options = optimoptions(@linprog, 'Algorithm', 'interior-point');
-    res = linprog(f, A, b, [], [], [], [], options);
+    res = linprog(f, A, b, [], [], [], []);
     w = res(1:n_params);
     
 end

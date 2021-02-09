@@ -1,1 +1,6 @@
 *.m~
+*.fig
+*.eps
+*.xlsx
+**results**
+report/*
