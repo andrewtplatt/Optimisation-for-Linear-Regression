@@ -7,5 +7,5 @@ function w = lsq_regression(train_D)
     A = M'*M;
     b = M'*results;
     % Compute w
-    w = inv(A)*b;
+    w = A\b;
 end

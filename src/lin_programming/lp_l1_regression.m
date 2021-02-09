@@ -42,9 +42,7 @@ function w = lp_l1_regression(train_D, lambda)
     b((2*n_params+n_data+1):end) = -y;
     
     %% Calculate the result
-    % Set the optimoptions
-    options = optimoptions(@linprog, 'Algorithm', 'interior-point');
-    res = linprog(f, A, b, [], [], [], []);
+    res = linprog(f, A, b);
     w = res(1:n_params);
     
 end

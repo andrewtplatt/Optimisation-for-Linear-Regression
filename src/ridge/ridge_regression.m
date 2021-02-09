@@ -13,5 +13,5 @@ function w = ridge_regression(train_D, lambda)
     b = M'* results;
     
     % Compute w
-    w = inv(A)*b;
+    w = A\b;
 end
