@@ -84,49 +84,49 @@ B = 64;
 
 % % Choose the best number for lambda using this batch size
 
-for i = 1:length(lambdas)
-  for k = 0:n_repeats - 1
-    datasets = split_n(trainval_D, n_sections);
-    for j = 1:n_sections
-      % Get our datasets
-      val_D = datasets(:, :, j);
-      train_sets = datasets;
-      train_sets(:, :, j) = [];
-      train_D = permute(train_sets, [1 3 2]);
-      train_D = reshape(train_D, [], n_params+1, 1);
-
-      % Remove padded empty rows
-      val_D = val_D(~all(val_D == 0, 2),:);
-      train_D = train_D(~all(train_D == 0, 2),:);
-      % Get the w vector and calculate the error for this value of lambda
-      tic
-      w = smoothed_stochastic_l1_regression(train_D, lambdas(i), B);
-      section_runtime(j + k*n_sections) = toc;
-      section_mae(j + k*n_sections) = compute_mean_abs_error(val_D, w);
-    end
-  end
-  maes2(i) = mean(section_mae);
-  sds2(i) = std(section_mae);
-  runtimes2(i) = mean(section_runtime);
-  runtime_sds2(i) = std(section_runtime);
-end
-
-figure
-subplot(2, 1, 1)
-errorbar(lambdas, maes2, sds2);
-set(gca, 'XScale', 'log');
-xlabel('\lambda');
-ylabel('Mean Absolute Error');
-grid
-xlim([6e-7 1.5e-1]);
-
-subplot(2, 1, 2)
-errorbar(lambdas, runtimes2, runtime_sds2);
-set(gca, 'XScale', 'log');
-xlabel('\lambda');
-ylabel('Runtime /s');
-grid
-xlim([6e-7 1.5e-1]);
+% for i = 1:length(lambdas)
+%   for k = 0:n_repeats - 1
+%     datasets = split_n(trainval_D, n_sections);
+%     for j = 1:n_sections
+%       % Get our datasets
+%       val_D = datasets(:, :, j);
+%       train_sets = datasets;
+%       train_sets(:, :, j) = [];
+%       train_D = permute(train_sets, [1 3 2]);
+%       train_D = reshape(train_D, [], n_params+1, 1);
+% 
+%       % Remove padded empty rows
+%       val_D = val_D(~all(val_D == 0, 2),:);
+%       train_D = train_D(~all(train_D == 0, 2),:);
+%       % Get the w vector and calculate the error for this value of lambda
+%       tic
+%       w = smoothed_stochastic_l1_regression(train_D, lambdas(i), B);
+%       section_runtime(j + k*n_sections) = toc;
+%       section_mae(j + k*n_sections) = compute_mean_abs_error(val_D, w);
+%     end
+%   end
+%   maes2(i) = mean(section_mae);
+%   sds2(i) = std(section_mae);
+%   runtimes2(i) = mean(section_runtime);
+%   runtime_sds2(i) = std(section_runtime);
+% end
+% 
+% figure
+% subplot(2, 1, 1)
+% errorbar(lambdas, maes2, sds2);
+% set(gca, 'XScale', 'log');
+% xlabel('\lambda');
+% ylabel('Mean Absolute Error');
+% grid
+% xlim([6e-7 1.5e-1]);
+% 
+% subplot(2, 1, 2)
+% errorbar(lambdas, runtimes2, runtime_sds2);
+% set(gca, 'XScale', 'log');
+% xlabel('\lambda');
+% ylabel('Runtime /s');
+% grid
+% xlim([6e-7 1.5e-1]);
 
 
 % Choose the best value for lambda
@@ -135,21 +135,19 @@ xlim([6e-7 1.5e-1]);
 lambda = 1e-3;
 
 
-% iteration_w = zeros(n_params, n_iterations);
-% for i = 1:n_iterations
-% %     [trainval_D, test_D] = random_split(D, frac);
-%     tic
-%     iteration_w(:, i) = smoothed_stochastic_l1_regression(trainval_D, lambda, B);
-%     iteration_runtime(i) = toc;
-%     disp(toc);
-%     iteration_mae(i) = compute_mean_abs_error(test_D, iteration_w(:, i));
-%     disp(iteration_mae(i));
-% end
-% w = mean(iteration_w, 2);
-% mae = mean(iteration_mae);
-% sd = std(iteration_mae);
-% runtime = mean(iteration_runtime);
-% runtime_sd = std(iteration_runtime);
+iteration_w = zeros(n_params, n_iterations);
+for i = 1:n_iterations
+%     [trainval_D, test_D] = random_split(D, frac);
+    tic
+    iteration_w(:, i) = smoothed_stochastic_l1_regression(trainval_D, lambda, B);
+    iteration_runtime(i) = toc;
+    iteration_mae(i) = compute_mean_abs_error(test_D, iteration_w(:, i));
+end
+w = mean(iteration_w, 2);
+mae = mean(iteration_mae);
+sd = std(iteration_mae);
+runtime = mean(iteration_runtime);
+runtime_sd = std(iteration_runtime);
 % 
 % % Write the results to a file
 % formatSpec = "Using a lambda value of %g and batch size of %d we obtain a w vector:\n";
